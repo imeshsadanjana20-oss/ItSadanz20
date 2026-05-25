@@ -53,7 +53,9 @@
         .delay-300 { transition-delay: 300ms; }
     </style>
 </head>
-<body>
+<body class="relative">
+
+<canvas id="snowCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
 
 <div id="toast" class="fixed top-5 right-5 bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg transform translate-x-full transition-transform duration-300 z-50 flex items-center gap-2">
     <i class="fas fa-check-circle"></i> <span id="toast-msg">Done!</span>
@@ -68,7 +70,7 @@
     </div>
 </nav>
 
-<header class="container mx-auto px-6 py-16 text-center max-w-3xl scroll-reveal">
+<header class="container mx-auto px-6 py-16 text-center max-w-3xl scroll-reveal relative z-10">
     <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
         Level Up Your Content With <span class="text-indigo-500 glow-text">Next-Gen</span> Editing
     </h1>
@@ -81,11 +83,11 @@
     </div>
 </header>
 
-<section id="services" class="container mx-auto px-6 py-12">
+<section id="services" class="container mx-auto px-6 py-12 relative z-10">
     <h2 class="text-2xl font-bold mb-8 text-center tracking-wide text-gray-300 scroll-reveal">CHOOSE YOUR CATEGORY</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-100">
+        <div class="bg-[#111827]/90 backdrop-blur-sm border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-100">
             <div class="w-12 h-12 bg-pink-500/10 text-pink-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
                 <i class="fab fa-tiktok"></i>
             </div>
@@ -94,7 +96,7 @@
             <a href="#order" onclick="selectService('TikTok Gifter Level')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
         </div>
 
-        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-200">
+        <div class="bg-[#111827]/90 backdrop-blur-sm border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-200">
             <div class="w-12 h-12 bg-indigo-500/10 text-indigo-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
                 <i class="fas fa-level-up-alt"></i>
             </div>
@@ -103,7 +105,7 @@
             <a href="#order" onclick="selectService('Member Level Up Video')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
         </div>
 
-        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-300">
+        <div class="bg-[#111827]/90 backdrop-blur-sm border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-300">
             <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
                 <i class="fas fa-microphone"></i>
             </div>
@@ -121,9 +123,9 @@
     </div>
 </section>
 
-<div class="container mx-auto px-6 py-12 max-w-6xl flex justify-center" id="main-grid">
+<div class="container mx-auto px-6 py-12 max-w-6xl flex justify-center relative z-10" id="main-grid">
 
-    <section id="order" class="bg-[#111827] border border-gray-800 p-8 rounded-3xl glow-effect max-w-2xl mx-auto w-full transition duration-500 scroll-reveal">
+    <section id="order" class="bg-[#111827]/90 backdrop-blur-sm border border-gray-800 p-8 rounded-3xl glow-effect max-w-2xl mx-auto w-full transition duration-500 scroll-reveal">
         <h2 class="text-3xl font-bold mb-2">Place Your Order</h2>
         <p class="text-gray-400 text-sm mb-6">Fill in your details and project details below to order via WhatsApp.</p>
 
@@ -152,14 +154,38 @@
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Estimated Budget (USD)</label>
                     <select id="clientBudget" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
-                        <option value="" disabled selected>Select Budget Range</option>
-                        <option value="Under $20">Under $20</option>
-                        <option value="$20 - $50">$20 - $50</option>
-                        <option value="$50 - $100">$50 - $100</option>
-                        <option value="$100 - $250">$100 - $250</option>
-                        <option value="$250 - $500">$250 - $500</option>
-                        <option value="$500+">$500+</option>
-                        <option value="Custom / To Be Discussed">Custom / To Be Discussed</option>
+                        <option value="" disabled selected>Select Budget ($1 - $30)</option>
+                        <option value="$1">$1</option>
+                        <option value="$2">$2</option>
+                        <option value="$3">$3</option>
+                        <option value="$4">$4</option>
+                        <option value="$5">$5</option>
+                        <option value="$6">$6</option>
+                        <option value="$7">$7</option>
+                        <option value="$8">$8</option>
+                        <option value="$9">$9</option>
+                        <option value="$10">$10</option>
+                        <option value="$11">$11</option>
+                        <option value="$12">$12</option>
+                        <option value="$13">$13</option>
+                        <option value="$14">$14</option>
+                        <option value="$15">$15</option>
+                        <option value="$16">$16</option>
+                        <option value="$17">$17</option>
+                        <option value="$18">$18</option>
+                        <option value="$19">$19</option>
+                        <option value="$20">$20</option>
+                        <option value="$21">$21</option>
+                        <option value="$22">$22</option>
+                        <option value="$23">$23</option>
+                        <option value="$24">$24</option>
+                        <option value="$25">$25</option>
+                        <option value="$26">$26</option>
+                        <option value="$27">$27</option>
+                        <option value="$28">$28</option>
+                        <option value="$29">$29</option>
+                        <option value="$30">$30</option>
+                        <option value="More than $30 (Custom / To Be Discussed)">More than $30 (Custom / To Be Discussed)</option>
                     </select>
                 </div>
             </div>
@@ -175,7 +201,7 @@
 
 </div>
 
-<footer class="border-t border-gray-800 bg-[#0f172a] mt-20 py-12 text-center text-sm text-gray-400 scroll-reveal">
+<footer class="border-t border-gray-800 bg-[#0f172a] mt-20 py-12 text-center text-sm text-gray-400 scroll-reveal relative z-10">
     <div class="mb-6 flex justify-center gap-6 text-xl text-gray-400">
         <a id="displayInsta" href="#" target="_blank" class="hover:text-pink-500 transition"><i class="fab fa-instagram"></i></a>
         <a id="displayTikTok" href="#" target="_blank" class="hover:text-white transition"><i class="fab fa-tiktok"></i></a>
@@ -282,9 +308,79 @@
         });
     }, observerOptions);
 
+    // --- Glowing Snow Particle System Logic ---
+    function initSnowEffect() {
+        const canvas = document.getElementById('snowCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvas.height; // Spread particles on start
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -10;
+                this.size = Math.random() * 2.5 + 1; // Subtle small sizes (1px to 3.5px)
+                this.speedY = Math.random() * 0.4 + 0.15; // Soft and slow fall speed
+                this.speedX = Math.random() * 0.2 - 0.1; // Gentle horizontal drift
+                this.opacity = Math.random() * 0.5 + 0.2; // Opacity variation
+                this.glow = Math.random() * 8 + 4; // Glowing radius
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+
+                // Simple twinkling effect (subtle opacity shifts)
+                this.opacity += Math.random() * 0.02 - 0.01;
+                if (this.opacity < 0.1) this.opacity = 0.1;
+                if (this.opacity > 0.7) this.opacity = 0.7;
+
+                // Reset particle if it leaves the viewable screen area
+                if (this.y > canvas.height || this.x < 0 || this.x > canvas.width) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.shadowBlur = this.glow;
+                ctx.shadowColor = 'rgba(99, 102, 241, 0.4)'; // Matches theme's Indigo glow
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Generate adaptive number of particles depending on viewport screen resolution
+        const particleCount = Math.floor((canvas.width * canvas.height) / 9500);
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.shadowBlur = 0; // Clear shadow setup for canvas optimization
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+
     // Run Setup and Animations on page load
     window.onload = function() {
         applyConfigValues();
+        initSnowEffect(); // Fire up particle background
         
         // Target all items with the .scroll-reveal class
         const animatedElements = document.querySelectorAll('.scroll-reveal');
