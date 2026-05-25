@@ -129,7 +129,12 @@
 
     <nav class="border-b border-gray-800 bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4 flex justify-between items-center">
         <div class="text-2xl font-bold tracking-wider text-indigo-400 glow-text">ItSadanz</div>
-        <div class="flex items-center gap-4">
+
+        <div class="flex items-center gap-3">
+            <button onclick="watchExampleVideo()" class="bg-red-600 hover:bg-red-700 text-sm px-4 py-2 rounded-lg transition flex items-center gap-2 btn-lift shadow-lg shadow-red-500/20">
+                <i class="fas fa-play-circle"></i> Watch Example Video
+            </button>
+
             <button onclick="sharePage()" class="bg-gray-800 hover:bg-gray-700 text-sm px-4 py-2 rounded-lg transition flex items-center gap-2 btn-lift">
                 <i class="fas fa-share-alt"></i> Share
             </button>
@@ -282,6 +287,8 @@
             youtube: "https://youtube.com/@itsadanz"
         };
 
+        const exampleVideoUrl = "https://drive.google.com/file/d/1R86xQnV5fCkOnqnu1jgafJoPNUnmMoRb/view?usp=drive_link";
+
         function applyConfigValues() {
             document.getElementById('txtPhone').innerText = config.phone;
             document.getElementById('txtEmail').innerText = config.email;
@@ -297,6 +304,11 @@
             toast.classList.remove('translate-x-full');
             clearTimeout(window.__toastTimer);
             window.__toastTimer = setTimeout(() => toast.classList.add('translate-x-full'), 3000);
+        }
+
+        function watchExampleVideo() {
+            window.open(exampleVideoUrl, '_blank', 'noopener,noreferrer');
+            showToast("Opening Example Video...");
         }
 
         function selectService(val) {
@@ -415,7 +427,6 @@
             animate();
         }
 
-        // Smooth anchor scrolling with a little inertia feel
         function smoothScrollTo(targetY) {
             const startY = window.scrollY;
             const diff = targetY - startY;
