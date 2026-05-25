@@ -32,6 +32,25 @@
             background: #3730a3;
             border-radius: 4px;
         }
+
+        /* --- Smooth Scroll Reveal Animations --- */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity, transform;
+        }
+        
+        /* State when element is visible in viewport */
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Optional: Add slight animation delays for staggered grid effects */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
     </style>
 </head>
 <body>
@@ -49,7 +68,7 @@
     </div>
 </nav>
 
-<header class="container mx-auto px-6 py-16 text-center max-w-3xl">
+<header class="container mx-auto px-6 py-16 text-center max-w-3xl scroll-reveal">
     <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
         Level Up Your Content With <span class="text-indigo-500 glow-text">Next-Gen</span> Editing
     </h1>
@@ -63,10 +82,10 @@
 </header>
 
 <section id="services" class="container mx-auto px-6 py-12">
-    <h2 class="text-2xl font-bold mb-8 text-center tracking-wide text-gray-300">CHOOSE YOUR CATEGORY</h2>
+    <h2 class="text-2xl font-bold mb-8 text-center tracking-wide text-gray-300 scroll-reveal">CHOOSE YOUR CATEGORY</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group">
+        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-100">
             <div class="w-12 h-12 bg-pink-500/10 text-pink-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
                 <i class="fab fa-tiktok"></i>
             </div>
@@ -75,7 +94,7 @@
             <a href="#order" onclick="selectService('TikTok Gifter Level')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
         </div>
 
-        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group">
+        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-200">
             <div class="w-12 h-12 bg-indigo-500/10 text-indigo-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
                 <i class="fas fa-level-up-alt"></i>
             </div>
@@ -84,7 +103,7 @@
             <a href="#order" onclick="selectService('Member Level Up Video')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
         </div>
 
-        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group">
+        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-300">
             <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
                 <i class="fas fa-microphone"></i>
             </div>
@@ -95,7 +114,7 @@
 
     </div>
 
-    <div class="text-center mt-8">
+    <div class="text-center mt-8 scroll-reveal">
         <a href="#order" onclick="selectService('More')" class="inline-flex items-center gap-2 text-gray-400 hover:text-white transition bg-gray-900 px-6 py-2 rounded-full border border-gray-800 text-sm">
             Need something else? Select <span class="text-indigo-400 font-semibold">"More Options"</span> in the form <i class="fas fa-plus text-xs"></i>
         </a>
@@ -104,37 +123,49 @@
 
 <div class="container mx-auto px-6 py-12 max-w-6xl flex justify-center" id="main-grid">
 
-    <section id="order" class="bg-[#111827] border border-gray-800 p-8 rounded-3xl glow-effect max-w-2xl mx-auto w-full transition duration-500">
+    <section id="order" class="bg-[#111827] border border-gray-800 p-8 rounded-3xl glow-effect max-w-2xl mx-auto w-full transition duration-500 scroll-reveal">
         <h2 class="text-3xl font-bold mb-2">Place Your Order</h2>
         <p class="text-gray-400 text-sm mb-6">Fill in your details and project details below to order via WhatsApp.</p>
 
         <form id="orderForm" onsubmit="handleOrder(event)" class="space-y-5">
-            <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Your Name</label>
-                <input type="text" id="clientName" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
-            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Your Name</label>
+                    <input type="text" id="clientName" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
+                </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Phone Number</label>
                     <input type="tel" id="clientPhone" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition" placeholder="e.g., 071234567">
                 </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Email Address</label>
-                    <input type="email" id="clientEmail" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Select Service Type</label>
+                    <select id="serviceSelect" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
+                        <option value="TikTok Gifter Level">TikTok Gifter Level</option>
+                        <option value="Member Level Up Video">Member Level Up Video</option>
+                        <option value="Podcast Editing">Podcast Editing</option>
+                        <option value="Normal Website Design">Normal Website Design</option>
+                        <option value="More">More Options</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Estimated Budget (USD)</label>
+                    <select id="clientBudget" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
+                        <option value="" disabled selected>Select Budget Range</option>
+                        <option value="Under $20">Under $20</option>
+                        <option value="$20 - $50">$20 - $50</option>
+                        <option value="$50 - $100">$50 - $100</option>
+                        <option value="$100 - $250">$100 - $250</option>
+                        <option value="$250 - $500">$250 - $500</option>
+                        <option value="$500+">$500+</option>
+                        <option value="Custom / To Be Discussed">Custom / To Be Discussed</option>
+                    </select>
                 </div>
             </div>
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Select Service Type</label>
-                <select id="serviceSelect" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
-                    <option value="TikTok Gifter Level">TikTok Gifter Level</option>
-                    <option value="Member Level Up Video">Member Level Up Video</option>
-                    <option value="Podcast Editing">Podcast Editing</option>
-                    <option value="More">More Options</option>
-                </select>
-            </div>
-            <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Project Brief / Requirements</label>
-                <textarea id="clientBrief" rows="4" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition" placeholder="Describe how you want your video edited..."></textarea>
+                <textarea id="clientBrief" rows="4" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition" placeholder="Describe how you want your project done..."></textarea>
             </div>
             <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 py-4 rounded-xl font-bold tracking-wide transition transform hover:scale-[1.01] shadow-lg shadow-indigo-500/10 flex items-center justify-center gap-2">
                 <i class="fab fa-whatsapp text-xl"></i> ORDER VIA WHATSAPP
@@ -144,7 +175,7 @@
 
 </div>
 
-<footer class="border-t border-gray-800 bg-[#0f172a] mt-20 py-12 text-center text-sm text-gray-400">
+<footer class="border-t border-gray-800 bg-[#0f172a] mt-20 py-12 text-center text-sm text-gray-400 scroll-reveal">
     <div class="mb-6 flex justify-center gap-6 text-xl text-gray-400">
         <a id="displayInsta" href="#" target="_blank" class="hover:text-pink-500 transition"><i class="fab fa-instagram"></i></a>
         <a id="displayTikTok" href="#" target="_blank" class="hover:text-white transition"><i class="fab fa-tiktok"></i></a>
@@ -200,30 +231,22 @@
     function handleOrder(e) {
         e.preventDefault();
         
-        // Get Form Values
         const name = document.getElementById('clientName').value;
         const phone = document.getElementById('clientPhone').value;
-        const email = document.getElementById('clientEmail').value;
         const service = document.getElementById('serviceSelect').value;
+        const budget = document.getElementById('clientBudget').value;
         const brief = document.getElementById('clientBrief').value;
 
-        // Format Message for WhatsApp
-        const whatsappMessage = `*New Order - ItSadanz Editing Suite*%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Email:* ${email}%0A*Category:* ${service}%0A*Project Brief:* ${brief}`;
-
-        // WhatsApp Number (with country code, no + or spaces)
+        const whatsappMessage = `*New Order - ItSadanz Suite*%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Category:* ${service}%0A*Budget:* ${budget}%0A*Project Brief:* ${brief}`;
         const whatsappNumber = "94714529996";
-        
-        // Create WhatsApp URL
         const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
-        // Open WhatsApp in a new tab
         window.open(whatsappUrl, '_blank');
-        
         showToast("Redirecting to WhatsApp...");
         e.target.reset();
     }
 
-    // Share Website Logic (Web Share API / Clipboard Fallback)
+    // Share Website Logic
     function sharePage() {
         const shareData = {
             title: 'ItSadanz | Premium Video Editing Services',
@@ -242,8 +265,31 @@
         }
     }
 
-    // Run Setup on page load
-    window.onload = applyConfigValues;
+    // --- Intersection Observer Setup for Fade In/Out on Scroll ---
+    const observerOptions = {
+        root: null, 
+        rootMargin: '0px',
+        threshold: 0.1 // Triggers when 10% of the element is visible
+    };
+
+    const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active'); // Fade-in when scrolling down/up into view
+            } else {
+                entry.target.classList.remove('active'); // Fade-out when scrolling away
+            }
+        });
+    }, observerOptions);
+
+    // Run Setup and Animations on page load
+    window.onload = function() {
+        applyConfigValues();
+        
+        // Target all items with the .scroll-reveal class
+        const animatedElements = document.querySelectorAll('.scroll-reveal');
+        animatedElements.forEach(el => scrollObserver.observe(el));
+    };
 </script>
 </body>
 </html>
