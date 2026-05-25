@@ -46,9 +46,6 @@
         <button onclick="sharePage()" class="bg-gray-800 hover:bg-gray-700 text-sm px-4 py-2 rounded-lg transition flex items-center gap-2">
             <i class="fas fa-share-alt"></i> Share
         </button>
-        <button onclick="toggleAdmin()" class="bg-indigo-600 hover:bg-indigo-700 text-sm px-4 py-2 rounded-lg font-semibold transition flex items-center gap-2">
-            <i class="fas fa-user-cog"></i> Admin Panel
-        </button>
     </div>
 </nav>
 
@@ -105,11 +102,11 @@
     </div>
 </section>
 
-<div class="container mx-auto px-6 py-12 max-w-6xl grid grid-cols-1 gap-12" id="main-grid">
+<div class="container mx-auto px-6 py-12 max-w-6xl flex justify-center" id="main-grid">
 
     <section id="order" class="bg-[#111827] border border-gray-800 p-8 rounded-3xl glow-effect max-w-2xl mx-auto w-full transition duration-500">
         <h2 class="text-3xl font-bold mb-2">Place Your Order</h2>
-        <p class="text-gray-400 text-sm mb-6">Fill in your details and project details below.</p>
+        <p class="text-gray-400 text-sm mb-6">Fill in your details and project details below to order via WhatsApp.</p>
 
         <form id="orderForm" onsubmit="handleOrder(event)" class="space-y-5">
             <div>
@@ -139,58 +136,12 @@
                 <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Project Brief / Requirements</label>
                 <textarea id="clientBrief" rows="4" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition" placeholder="Describe how you want your video edited..."></textarea>
             </div>
-            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 py-4 rounded-xl font-bold tracking-wide transition transform hover:scale-[1.01] shadow-lg shadow-indigo-500/10">
-                SUBMIT ORDER
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 py-4 rounded-xl font-bold tracking-wide transition transform hover:scale-[1.01] shadow-lg shadow-indigo-500/10 flex items-center justify-center gap-2">
+                <i class="fab fa-whatsapp text-xl"></i> ORDER VIA WHATSAPP
             </button>
         </form>
     </section>
 
-    <section id="admin-panel" class="hidden bg-[#0f172a] border border-dashed border-indigo-500/40 p-8 rounded-3xl w-full">
-        <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
-            <div>
-                <h2 class="text-2xl font-bold text-indigo-400 flex items-center gap-2"><i class="fas fa-lock"></i> ItSadanz Admin Dashboard</h2>
-                <p class="text-xs text-gray-400 mt-1">Only you can see and update these configuration settings.</p>
-            </div>
-            <button onclick="toggleAdmin()" class="text-sm text-gray-400 hover:text-white"><i class="fas fa-times"></i> Close</button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-[#1e293b] p-6 rounded-2xl">
-            <div>
-                <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">Update Contact Information</h3>
-                <div class="space-y-3">
-                    <input type="text" id="adminPhone" placeholder="Your Phone (e.g. +94...)" class="w-full bg-[#0f172a] text-sm border border-gray-700 rounded-lg px-3 py-2 text-white">
-                    <input type="email" id="adminEmail" placeholder="Your Work Email" class="w-full bg-[#0f172a] text-sm border border-gray-700 rounded-lg px-3 py-2 text-white">
-                    <button onclick="saveContactDetails()" class="bg-emerald-600 hover:bg-emerald-700 text-xs px-4 py-2 rounded-lg font-medium transition">Save Contact Details</button>
-                </div>
-            </div>
-            <div>
-                <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">Update Social Media Handles</h3>
-                <div class="grid grid-cols-2 gap-2 text-xs">
-                    <input type="text" id="linkInsta" placeholder="Instagram URL" class="bg-[#0f172a] border border-gray-700 rounded p-2">
-                    <input type="text" id="linkTikTok" placeholder="TikTok URL" class="bg-[#0f172a] border border-gray-700 rounded p-2">
-                    <input type="text" id="linkFB" placeholder="Facebook URL" class="bg-[#0f172a] border border-gray-700 rounded p-2">
-                    <input type="text" id="linkYT" placeholder="YouTube URL" class="bg-[#0f172a] border border-gray-700 rounded p-2">
-                </div>
-                <button onclick="saveSocialLinks()" class="bg-emerald-600 hover:bg-emerald-700 text-xs px-4 py-2 rounded-lg font-medium transition mt-3">Save Links</button>
-            </div>
-        </div>
-
-        <h3 class="text-lg font-semibold mb-4 text-gray-200">Received Client Orders</h3>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-gray-300">
-                <thead class="bg-[#1e293b] text-xs uppercase tracking-wider text-gray-400">
-                <tr>
-                    <th class="p-3">Client</th>
-                    <th class="p-3">Contact info</th>
-                    <th class="p-3">Category Chosen</th>
-                    <th class="p-3">Brief Details</th>
-                </tr>
-                </thead>
-                <tbody id="orderLogs" class="divide-y divide-gray-800">
-                </tbody>
-            </table>
-        </div>
-    </section>
 </div>
 
 <footer class="border-t border-gray-800 bg-[#0f172a] mt-20 py-12 text-center text-sm text-gray-400">
@@ -208,8 +159,8 @@
 </footer>
 
 <script>
-    // Initial State Configuration
-    let config = JSON.parse(localStorage.getItem('itsadanz_config')) || {
+    // Initial Configuration
+    let config = {
         phone: "+94 71 452 9996",
         email: "imeshsadanjana20@gmail.com",
         instagram: "https://www.instagram.com/sadanz20",
@@ -218,21 +169,11 @@
         youtube: "https://youtube.com/@itsadanz"
     };
 
-    let orders = JSON.parse(localStorage.getItem('itsadanz_orders')) || [];
-
     // Update Website Elements with Config Data
     function applyConfigValues() {
         // Footer texts
         document.getElementById('txtPhone').innerText = config.phone;
         document.getElementById('txtEmail').innerText = config.email;
-        
-        // Admin Panel Inputs
-        document.getElementById('adminPhone').value = config.phone;
-        document.getElementById('adminEmail').value = config.email;
-        document.getElementById('linkInsta').value = config.instagram;
-        document.getElementById('linkTikTok').value = config.tiktok;
-        document.getElementById('linkFB').value = config.facebook;
-        document.getElementById('linkYT').value = config.youtube;
 
         // Footer Social Links
         document.getElementById('displayInsta').href = config.instagram;
@@ -255,73 +196,31 @@
         showToast(`Selected Category: ${val}`);
     }
 
-    // Toggle Admin Dashboard
-    function toggleAdmin() {
-        const admin = document.getElementById('admin-panel');
-        admin.classList.toggle('hidden');
-        if(!admin.classList.contains('hidden')) {
-            admin.scrollIntoView({ behavior: 'smooth' });
-            renderOrdersTable();
-        }
-    }
-
-    // Handle Form Submission
+    // Handle Form Submission - Redirect to WhatsApp
     function handleOrder(e) {
         e.preventDefault();
-        const newOrder = {
-            name: document.getElementById('clientName').value,
-            phone: document.getElementById('clientPhone').value,
-            email: document.getElementById('clientEmail').value,
-            service: document.getElementById('serviceSelect').value,
-            brief: document.getElementById('clientBrief').value
-        };
+        
+        // Get Form Values
+        const name = document.getElementById('clientName').value;
+        const phone = document.getElementById('clientPhone').value;
+        const email = document.getElementById('clientEmail').value;
+        const service = document.getElementById('serviceSelect').value;
+        const brief = document.getElementById('clientBrief').value;
 
-        orders.push(newOrder);
-        localStorage.setItem('itsadanz_orders', JSON.stringify(orders));
-        showToast("✨ Order Registered Successfully!");
+        // Format Message for WhatsApp
+        const whatsappMessage = `*New Order - ItSadanz Editing Suite*%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Email:* ${email}%0A*Category:* ${service}%0A*Project Brief:* ${brief}`;
+
+        // WhatsApp Number (with country code, no + or spaces)
+        const whatsappNumber = "94714529996";
+        
+        // Create WhatsApp URL
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
+        // Open WhatsApp in a new tab
+        window.open(whatsappUrl, '_blank');
+        
+        showToast("Redirecting to WhatsApp...");
         e.target.reset();
-        
-        if (!document.getElementById('admin-panel').classList.contains('hidden')) {
-            renderOrdersTable();
-        }
-    }
-
-    // Render Orders in Admin Panel
-    function renderOrdersTable() {
-        const container = document.getElementById('orderLogs');
-        if(orders.length === 0) {
-            container.innerHTML = `<tr class="text-gray-500 text-xs"><td colspan="4" class="p-4 text-center">No current orders recorded in browser memory. Try submitting the form above!</td></tr>`;
-            return;
-        }
-        
-        container.innerHTML = orders.map(o => `
-            <tr class="border-b border-gray-800 text-xs hover:bg-gray-900/50">
-                <td class="p-3 font-semibold text-white">${o.name}</td>
-                <td class="p-3 text-gray-400">${o.phone}<br>${o.email}</td>
-                <td class="p-3"><span class="bg-indigo-900/40 text-indigo-300 px-2 py-1 rounded">${o.service}</span></td>
-                <td class="p-3 max-w-xs break-words">${o.brief}</td>
-            </tr>
-        `).join('');
-    }
-
-    // Save Admin Contact Details
-    function saveContactDetails() {
-        config.phone = document.getElementById('adminPhone').value;
-        config.email = document.getElementById('adminEmail').value;
-        localStorage.setItem('itsadanz_config', JSON.stringify(config));
-        applyConfigValues();
-        showToast("Contact Info Saved!");
-    }
-
-    // Save Admin Social Links
-    function saveSocialLinks() {
-        config.instagram = document.getElementById('linkInsta').value;
-        config.tiktok = document.getElementById('linkTikTok').value;
-        config.facebook = document.getElementById('linkFB').value;
-        config.youtube = document.getElementById('linkYT').value;
-        localStorage.setItem('itsadanz_config', JSON.stringify(config));
-        applyConfigValues();
-        showToast("Social Links Saved!");
     }
 
     // Share Website Logic (Web Share API / Clipboard Fallback)
@@ -332,13 +231,11 @@
             url: window.location.href
         };
 
-        // Try using native mobile/OS sharing menu
         if (navigator.share && navigator.canShare(shareData)) {
             navigator.share(shareData)
                 .then(() => showToast("Shared Successfully!"))
                 .catch((error) => console.log("Sharing failed or cancelled", error));
         } else {
-            // Fallback for Desktop: Copy link to clipboard
             navigator.clipboard.writeText(window.location.href)
                 .then(() => showToast("Link copied to clipboard!"))
                 .catch(() => showToast("Failed to copy link."));
@@ -350,5 +247,3 @@
 </script>
 </body>
 </html>
-
-```
