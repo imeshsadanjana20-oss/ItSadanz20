@@ -1,763 +1,458 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ItSadanz | Premium Video Editing Services</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-
     <style>
+        :root {
+            --bg: #0b0f19;
+            --panel: rgba(17, 24, 39, 0.9);
+            --panel-2: rgba(15, 23, 42, 0.84);
+            --line: rgba(55, 65, 81, 0.95);
+            --accent: #6366f1;
+            --accent-2: #818cf8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 92px;
+            overscroll-behavior-y: none;
+        }
 
         body {
-
             font-family: 'Poppins', sans-serif;
-
-            background-color: #0b0f19;
-
+            background:
+                radial-gradient(circle at top, rgba(99, 102, 241, 0.14), transparent 35%),
+                radial-gradient(circle at bottom, rgba(16, 185, 129, 0.06), transparent 30%),
+                var(--bg);
             color: #f3f4f6;
-
             overflow-x: hidden;
-
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            scroll-behavior: smooth;
         }
 
         .glow-effect {
-
             box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
-
         }
 
         .glow-text {
-
             text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
-
         }
 
-        /* Custom Scrollbar */
-
-        ::-webkit-scrollbar {
-
-            width: 8px;
-
-        }
-
-        ::-webkit-scrollbar-track {
-
-            background: #0b0f19;
-
-        }
-
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
         ::-webkit-scrollbar-thumb {
-
             background: #3730a3;
-
             border-radius: 4px;
-
         }
-
-
-        /* --- Smooth Scroll Reveal Animations --- */
 
         .scroll-reveal {
-
             opacity: 0;
-
-            transform: translateY(40px);
-
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-
-            will-change: opacity, transform;
-
+            transform: translate3d(0, 42px, 0) scale(0.985);
+            filter: blur(10px);
+            transition:
+                opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                filter 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: opacity, transform, filter;
         }
-
-
-
-        /* State when element is visible in viewport */
 
         .scroll-reveal.active {
-
             opacity: 1;
-
-            transform: translateY(0);
-
+            transform: translate3d(0, 0, 0) scale(1);
+            filter: blur(0);
         }
 
-
-        /* Optional: Add slight animation delays for staggered grid effects */
-
         .delay-100 { transition-delay: 100ms; }
-
         .delay-200 { transition-delay: 200ms; }
-
         .delay-300 { transition-delay: 300ms; }
-
         .delay-400 { transition-delay: 400ms; }
 
-    </style>
+        .smooth-panel {
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
 
+        .parallax-soft {
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        main {
+            scroll-snap-type: y proximity;
+        }
+
+        section, header, footer {
+            scroll-snap-align: start;
+        }
+
+        .btn-lift {
+            transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+        }
+
+        .btn-lift:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-lift {
+            transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease;
+        }
+
+        .card-lift:hover {
+            transform: translateY(-4px);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .scroll-reveal, .btn-lift, .card-lift {
+                transition: none !important;
+                transform: none !important;
+                filter: none !important;
+            }
+        }
+    </style>
 </head>
 
 <body class="relative">
+    <canvas id="snowCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
 
-
-<canvas id="snowCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
-
-
-<div id="toast" class="fixed top-5 right-5 bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg transform translate-x-full transition-transform duration-300 z-50 flex items-center gap-2">
-
-    <i class="fas fa-check-circle"></i> <span id="toast-msg">Done!</span>
-
-</div>
-
-
-<nav class="border-b border-gray-800 bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4 flex justify-between items-center">
-
-    <div class="text-2xl font-bold tracking-wider text-indigo-400 glow-text">ItSadanz</div>
-
-    <div class="flex items-center gap-4">
-
-        <button onclick="sharePage()" class="bg-gray-800 hover:bg-gray-700 text-sm px-4 py-2 rounded-lg transition flex items-center gap-2">
-
-            <i class="fas fa-share-alt"></i> Share
-
-        </button>
-
+    <div id="toast" class="fixed top-5 right-5 bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg transform translate-x-full transition-transform duration-300 z-50 flex items-center gap-2">
+        <i class="fas fa-check-circle"></i> <span id="toast-msg">Done!</span>
     </div>
 
-</nav>
-
-
-<header class="container mx-auto px-6 py-16 text-center max-w-3xl scroll-reveal relative z-10">
-
-    <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-
-        Level Up Your Content With <span class="text-indigo-500 glow-text">Next-Gen</span> Editing
-
-    </h1>
-
-    <p class="text-gray-400 text-lg mb-8">
-
-        High-end video transformation tailored for creators, streamers, and podcasters. Fast delivery, premium quality.
-
-    </p>
-
-    <div class="flex justify-center gap-4 flex-wrap">
-
-        <a href="#services" class="bg-indigo-600 hover:bg-indigo-700 px-8 py-3 rounded-xl font-medium transition transform hover:-translate-y-1 shadow-lg shadow-indigo-500/20">View Services</a>
-
-        <a href="#order" class="bg-gray-800 hover:bg-gray-700 px-8 py-3 rounded-xl font-medium transition border border-gray-700">Place an Order</a>
-
-    </div>
-
-</header>
-
-
-<section id="services" class="container mx-auto px-6 py-12 relative z-10">
-
-    <h2 class="text-2xl font-bold mb-8 text-center tracking-wide text-gray-300 scroll-reveal">CHOOSE YOUR CATEGORY</h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-
-        <div class="bg-[#111827]/90 backdrop-blur-sm border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-100">
-
-            <div class="w-12 h-12 bg-pink-500/10 text-pink-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
-
-                <i class="fab fa-tiktok"></i>
-
-            </div>
-
-            <h3 class="text-xl font-semibold mb-3">TikTok Gifter Level</h3>
-
-            <p class="text-gray-400 text-sm mb-6">Custom hype videos and visual effects tailored for high-tier TikTok gifters and profiles.</p>
-
-            <a href="#order" onclick="selectService('TikTok Gifter Level')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
-
-        </div>
-
-
-        <div class="bg-[#111827]/90 backdrop-blur-sm border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-200">
-
-            <div class="w-12 h-12 bg-indigo-500/10 text-indigo-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
-
-                <i class="fas fa-level-up-alt"></i>
-
-            </div>
-
-            <h3 class="text-xl font-semibold mb-3">Member Level Up Video</h3>
-
-            <p class="text-gray-400 text-sm mb-6">Celebrate your community milestones with dynamic, animated tier upgrade videos.</p>
-
-            <a href="#order" onclick="selectService('Member Level Up Video')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
-
-        </div>
-
-
-        <div class="bg-[#111827]/90 backdrop-blur-sm border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-300">
-
-            <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
-
-                <i class="fas fa-microphone"></i>
-
-            </div>
-
-            <h3 class="text-xl font-semibold mb-3">Podcast Editing</h3>
-
-            <p class="text-gray-400 text-sm mb-6">Clean audio cut, multi-cam switching, color grading, and engaging shorts creation.</p>
-
-            <a href="#order" onclick="selectService('Podcast Editing')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
-
-        </div>
-
-        <div class="bg-[#111827]/90 backdrop-blur-sm border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-400 md:col-span-3">
-
-            <div class="w-12 h-12 bg-cyan-500/10 text-cyan-400 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
-
-                <i class="fas fa-video"></i>
-
-            </div>
-
-            <h3 class="text-xl font-semibold mb-3">TikTok Live Events</h3>
-
-            <p class="text-gray-400 text-sm mb-6">Live event highlight edits, stream recaps, overlays, and high-energy promotional clips for TikTok lives.</p>
-
-            <a href="#order" onclick="selectService('TikTok Live Events')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
-
-        </div>
-
-
-    </div>
-
-
-    <div class="text-center mt-8 scroll-reveal">
-
-        <a href="#order" onclick="selectService('More')" class="inline-flex items-center gap-2 text-gray-400 hover:text-white transition bg-gray-900 px-6 py-2 rounded-full border border-gray-800 text-sm">
-
-            Need something else? Select <span class="text-indigo-400 font-semibold">"More Options"</span> in the form <i class="fas fa-plus text-xs"></i>
-
-        </a>
-
-    </div>
-
-</section>
-
-
-<div class="container mx-auto px-6 py-12 max-w-6xl flex justify-center relative z-10" id="main-grid">
-
-
-    <section id="order" class="bg-[#111827]/90 backdrop-blur-sm border border-gray-800 p-8 rounded-3xl glow-effect max-w-2xl mx-auto w-full transition duration-500 scroll-reveal">
-
-        <h2 class="text-3xl font-bold mb-2">Place Your Order</h2>
-
-        <p class="text-gray-400 text-sm mb-6">Fill in your details and project details below to order via WhatsApp.</p>
-
-
-        <form id="orderForm" onsubmit="handleOrder(event)" class="space-y-5">
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                <div>
-
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Your Name</label>
-
-                    <input type="text" id="clientName" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
-
-                </div>
-
-                <div>
-
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Phone Number</label>
-
-                    <input type="tel" id="clientPhone" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition" placeholder="e.g., 071234567">
-
-                </div>
-
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                <div>
-
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Select Service Type</label>
-
-                    <select id="serviceSelect" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
-
-                        <option value="TikTok Gifter Level">TikTok Gifter Level</option>
-
-                        <option value="Member Level Up Video">Member Level Up Video</option>
-
-                        <option value="Podcast Editing">Podcast Editing</option>
-
-                        <option value="TikTok Live Events">TikTok Live Events</option>
-
-                        <option value="Normal Website Design">Normal Website Design</option>
-
-                        <option value="More">More Options</option>
-
-                    </select>
-
-                </div>
-
-                <div>
-
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Estimated Budget (USD)</label>
-
-                    <select id="clientBudget" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
-
-                        <option value="" disabled selected>Select Budget ($1 - $30)</option>
-
-                        <option value="$1">$1</option>
-
-                        <option value="$2">$2</option>
-
-                        <option value="$3">$3</option>
-
-                        <option value="$4">$4</option>
-
-                        <option value="$5">$5</option>
-
-                        <option value="$6">$6</option>
-
-                        <option value="$7">$7</option>
-
-                        <option value="$8">$8</option>
-
-                        <option value="$9">$9</option>
-
-                        <option value="$10">$10</option>
-
-                        <option value="$11">$11</option>
-
-                        <option value="$12">$12</option>
-
-                        <option value="$13">$13</option>
-
-                        <option value="$14">$14</option>
-
-                        <option value="$15">$15</option>
-
-                        <option value="$16">$16</option>
-
-                        <option value="$17">$17</option>
-
-                        <option value="$18">$18</option>
-
-                        <option value="$19">$19</option>
-
-                        <option value="$20">$20</option>
-
-                        <option value="$21">$21</option>
-
-                        <option value="$22">$22</option>
-
-                        <option value="$23">$23</option>
-
-                        <option value="$24">$24</option>
-
-                        <option value="$25">$25</option>
-
-                        <option value="$26">$26</option>
-
-                        <option value="$27">$27</option>
-
-                        <option value="$28">$28</option>
-
-                        <option value="$29">$29</option>
-
-                        <option value="$30">$30</option>
-
-                        <option value="More than $30 (Custom / To Be Discussed)">More than $30 (Custom / To Be Discussed)</option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-            <div>
-
-                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Project Brief / Requirements</label>
-
-                <textarea id="clientBrief" rows="4" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition" placeholder="Describe how you want your project done..."></textarea>
-
-            </div>
-
-            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 py-4 rounded-xl font-bold tracking-wide transition transform hover:scale-[1.01] shadow-lg shadow-indigo-500/10 flex items-center justify-center gap-2">
-
-                <i class="fab fa-whatsapp text-xl"></i> ORDER VIA WHATSAPP
-
+    <nav class="border-b border-gray-800 bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4 flex justify-between items-center">
+        <div class="text-2xl font-bold tracking-wider text-indigo-400 glow-text">ItSadanz</div>
+        <div class="flex items-center gap-4">
+            <button onclick="sharePage()" class="bg-gray-800 hover:bg-gray-700 text-sm px-4 py-2 rounded-lg transition flex items-center gap-2 btn-lift">
+                <i class="fas fa-share-alt"></i> Share
             </button>
-
-        </form>
-
-    </section>
-
-
-</div>
-
-
-<footer class="border-t border-gray-800 bg-[#0f172a] mt-20 py-12 text-center text-sm text-gray-400 scroll-reveal relative z-10">
-
-    <div class="mb-6 flex justify-center gap-6 text-xl text-gray-400">
-
-        <a id="displayInsta" href="#" target="_blank" class="hover:text-pink-500 transition"><i class="fab fa-instagram"></i></a>
-
-        <a id="displayTikTok" href="#" target="_blank" class="hover:text-white transition"><i class="fab fa-tiktok"></i></a>
-
-        <a id="displayFB" href="#" target="_blank" class="hover:text-blue-500 transition"><i class="fab fa-facebook"></i></a>
-
-        <a id="displayYT" href="#" target="_blank" class="hover:text-red-500 transition"><i class="fab fa-youtube"></i></a>
-
-    </div>
-
-    <div class="space-y-1 mb-4 text-xs">
-
-        <p>Email: <span id="txtEmail" class="text-gray-200 font-medium">imeshsadanjana20@gmail.com</span></p>
-
-        <p>Phone: <span id="txtPhone" class="text-gray-200 font-medium">+94 71 452 9996</span></p>
-
-    </div>
-
-    <p>© 2026 ItSadanz Editing Suite. All Rights Reserved.</p>
-
-</footer>
-
-
-<script>
-
-    // Initial Configuration
-
-    let config = {
-
-        phone: "+94 71 452 9996",
-
-        email: "imeshsadanjana20@gmail.com",
-
-        instagram: "https://www.instagram.com/sadanz20",
-
-        tiktok: "https://www.tiktok.com/@sadanz20",
-
-        facebook: "https://www.facebook.com/share/1CkC1rsE1K/",
-
-        youtube: "https://youtube.com/@itsadanz"
-
-    };
-
-
-    // Update Website Elements with Config Data
-
-    function applyConfigValues() {
-
-        // Footer texts
-
-        document.getElementById('txtPhone').innerText = config.phone;
-
-        document.getElementById('txtEmail').innerText = config.email;
-
-
-        // Footer Social Links
-
-        document.getElementById('displayInsta').href = config.instagram;
-
-        document.getElementById('displayTikTok').href = config.tiktok;
-
-        document.getElementById('displayFB').href = config.facebook;
-
-        document.getElementById('displayYT').href = config.youtube;
-
-    }
-
-
-    // Show Notification Toast
-
-    function showToast(message) {
-
-        const toast = document.getElementById('toast');
-
-        document.getElementById('toast-msg').innerText = message;
-
-        toast.classList.remove('translate-x-full');
-
-        setTimeout(() => toast.classList.add('translate-x-full'), 3000);
-
-    }
-
-
-    // Category Selection Logic
-
-    function selectService(val) {
-
-        document.getElementById('serviceSelect').value = val;
-
-        showToast(`Selected Category: ${val}`);
-
-    }
-
-
-    // Handle Form Submission - Redirect to WhatsApp
-
-    function handleOrder(e) {
-
-        e.preventDefault();
-
-
-
-        const name = document.getElementById('clientName').value;
-
-        const phone = document.getElementById('clientPhone').value;
-
-        const service = document.getElementById('serviceSelect').value;
-
-        const budget = document.getElementById('clientBudget').value;
-
-        const brief = document.getElementById('clientBrief').value;
-
-
-        const whatsappMessage = `*New Order - ItSadanz Suite*%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Category:* ${service}%0A*Budget:* ${budget}%0A*Project Brief:* ${brief}`;
-
-        const whatsappNumber = "94714529996";
-
-        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-
-
-        window.open(whatsappUrl, '_blank');
-
-        showToast("Redirecting to WhatsApp...");
-
-        e.target.reset();
-
-    }
-
-
-    // Share Website Logic
-
-    function sharePage() {
-
-        const shareData = {
-
-            title: 'ItSadanz | Premium Video Editing Services',
-
-            text: 'Level up your content with next-gen video editing! Check out ItSadanz Editing Suite.',
-
-            url: window.location.href
-
+        </div>
+    </nav>
+
+    <main>
+        <header class="container mx-auto px-6 py-16 text-center max-w-3xl scroll-reveal relative z-10">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                Level Up Your Content With <span class="text-indigo-500 glow-text">Next-Gen</span> Editing
+            </h1>
+            <p class="text-gray-400 text-lg mb-8">
+                High-end video transformation tailored for creators, streamers, and podcasters. Fast delivery, premium quality.
+            </p>
+            <div class="flex justify-center gap-4 flex-wrap">
+                <a href="#services" class="bg-indigo-600 hover:bg-indigo-700 px-8 py-3 rounded-xl font-medium transition shadow-lg shadow-indigo-500/20 btn-lift">View Services</a>
+                <a href="#order" class="bg-gray-800 hover:bg-gray-700 px-8 py-3 rounded-xl font-medium transition border border-gray-700 btn-lift">Place an Order</a>
+            </div>
+        </header>
+
+        <section id="services" class="container mx-auto px-6 py-12 relative z-10">
+            <h2 class="text-2xl font-bold mb-8 text-center tracking-wide text-gray-300 scroll-reveal">CHOOSE YOUR CATEGORY</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-[#111827]/90 smooth-panel border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-100 card-lift">
+                    <div class="w-12 h-12 bg-pink-500/10 text-pink-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">TikTok Gifter Level</h3>
+                    <p class="text-gray-400 text-sm mb-6">Custom hype videos and visual effects tailored for high-tier TikTok gifters and profiles.</p>
+                    <a href="#order" onclick="selectService('TikTok Gifter Level')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
+                </div>
+
+                <div class="bg-[#111827]/90 smooth-panel border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-200 card-lift">
+                    <div class="w-12 h-12 bg-indigo-500/10 text-indigo-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
+                        <i class="fas fa-level-up-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Member Level Up Video</h3>
+                    <p class="text-gray-400 text-sm mb-6">Celebrate your community milestones with dynamic, animated tier upgrade videos.</p>
+                    <a href="#order" onclick="selectService('Member Level Up Video')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
+                </div>
+
+                <div class="bg-[#111827]/90 smooth-panel border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-300 card-lift">
+                    <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Podcast Editing</h3>
+                    <p class="text-gray-400 text-sm mb-6">Clean audio cut, multi-cam switching, color grading, and engaging shorts creation.</p>
+                    <a href="#order" onclick="selectService('Podcast Editing')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
+                </div>
+
+                <div class="bg-[#111827]/90 smooth-panel border border-gray-800 p-6 rounded-2xl glow-effect hover:border-indigo-500/50 transition duration-300 group scroll-reveal delay-400 md:col-span-3 card-lift">
+                    <div class="w-12 h-12 bg-cyan-500/10 text-cyan-400 rounded-xl flex items-center justify-center mb-6 text-xl group-hover:scale-110 transition">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">TikTok Live Events</h3>
+                    <p class="text-gray-400 text-sm mb-6">Live event highlight edits, stream recaps, overlays, and high-energy promotional clips for TikTok lives.</p>
+                    <a href="#order" onclick="selectService('TikTok Live Events')" class="text-indigo-400 font-medium text-sm flex items-center gap-2 group-hover:text-indigo-300">Order Now <i class="fas fa-arrow-right text-xs"></i></a>
+                </div>
+            </div>
+
+            <div class="text-center mt-8 scroll-reveal">
+                <a href="#order" onclick="selectService('More')" class="inline-flex items-center gap-2 text-gray-400 hover:text-white transition bg-gray-900 px-6 py-2 rounded-full border border-gray-800 text-sm btn-lift">
+                    Need something else? Select <span class="text-indigo-400 font-semibold">"More Options"</span> in the form <i class="fas fa-plus text-xs"></i>
+                </a>
+            </div>
+        </section>
+
+        <div class="container mx-auto px-6 py-12 max-w-6xl flex justify-center relative z-10" id="main-grid">
+            <section id="order" class="bg-[#111827]/90 smooth-panel border border-gray-800 p-8 rounded-3xl glow-effect max-w-2xl mx-auto w-full transition duration-500 scroll-reveal card-lift">
+                <h2 class="text-3xl font-bold mb-2">Place Your Order</h2>
+                <p class="text-gray-400 text-sm mb-6">Fill in your details and project details below to order via WhatsApp.</p>
+
+                <form id="orderForm" onsubmit="handleOrder(event)" class="space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Your Name</label>
+                            <input type="text" id="clientName" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Phone Number</label>
+                            <input type="tel" id="clientPhone" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition" placeholder="e.g., 071234567">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Select Service Type</label>
+                            <select id="serviceSelect" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
+                                <option value="TikTok Gifter Level">TikTok Gifter Level</option>
+                                <option value="Member Level Up Video">Member Level Up Video</option>
+                                <option value="Podcast Editing">Podcast Editing</option>
+                                <option value="TikTok Live Events">TikTok Live Events</option>
+                                <option value="Normal Website Design">Normal Website Design</option>
+                                <option value="More">More Options</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Estimated Budget (USD)</label>
+                            <select id="clientBudget" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition">
+                                <option value="" disabled selected>Select Budget ($1 - $30)</option>
+                                <option value="$1">$1</option><option value="$2">$2</option><option value="$3">$3</option><option value="$4">$4</option><option value="$5">$5</option>
+                                <option value="$6">$6</option><option value="$7">$7</option><option value="$8">$8</option><option value="$9">$9</option><option value="$10">$10</option>
+                                <option value="$11">$11</option><option value="$12">$12</option><option value="$13">$13</option><option value="$14">$14</option><option value="$15">$15</option>
+                                <option value="$16">$16</option><option value="$17">$17</option><option value="$18">$18</option><option value="$19">$19</option><option value="$20">$20</option>
+                                <option value="$21">$21</option><option value="$22">$22</option><option value="$23">$23</option><option value="$24">$24</option><option value="$25">$25</option>
+                                <option value="$26">$26</option><option value="$27">$27</option><option value="$28">$28</option><option value="$29">$29</option><option value="$30">$30</option>
+                                <option value="More than $30 (Custom / To Be Discussed)">More than $30 (Custom / To Be Discussed)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Project Brief / Requirements</label>
+                        <textarea id="clientBrief" rows="4" required class="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition" placeholder="Describe how you want your project done..."></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 py-4 rounded-xl font-bold tracking-wide transition transform hover:scale-[1.01] shadow-lg shadow-indigo-500/10 flex items-center justify-center gap-2 btn-lift">
+                        <i class="fab fa-whatsapp text-xl"></i> ORDER VIA WHATSAPP
+                    </button>
+                </form>
+            </section>
+        </div>
+
+        <footer class="border-t border-gray-800 bg-[#0f172a] mt-20 py-12 text-center text-sm text-gray-400 scroll-reveal relative z-10">
+            <div class="mb-6 flex justify-center gap-6 text-xl text-gray-400">
+                <a id="displayInsta" href="#" target="_blank" class="hover:text-pink-500 transition"><i class="fab fa-instagram"></i></a>
+                <a id="displayTikTok" href="#" target="_blank" class="hover:text-white transition"><i class="fab fa-tiktok"></i></a>
+                <a id="displayFB" href="#" target="_blank" class="hover:text-blue-500 transition"><i class="fab fa-facebook"></i></a>
+                <a id="displayYT" href="#" target="_blank" class="hover:text-red-500 transition"><i class="fab fa-youtube"></i></a>
+            </div>
+
+            <div class="space-y-1 mb-4 text-xs">
+                <p>Email: <span id="txtEmail" class="text-gray-200 font-medium">imeshsadanjana20@gmail.com</span></p>
+                <p>Phone: <span id="txtPhone" class="text-gray-200 font-medium">+94 71 452 9996</span></p>
+            </div>
+
+            <p>© 2026 ItSadanz Editing Suite. All Rights Reserved.</p>
+        </footer>
+    </main>
+
+    <script>
+        let config = {
+            phone: "+94 71 452 9996",
+            email: "imeshsadanjana20@gmail.com",
+            instagram: "https://www.instagram.com/sadanz20",
+            tiktok: "https://www.tiktok.com/@sadanz20",
+            facebook: "https://www.facebook.com/share/1CkC1rsE1K/",
+            youtube: "https://youtube.com/@itsadanz"
         };
 
-
-        if (navigator.share && navigator.canShare(shareData)) {
-
-            navigator.share(shareData)
-
-                .then(() => showToast("Shared Successfully!"))
-
-                .catch((error) => console.log("Sharing failed or cancelled", error));
-
-        } else {
-
-            navigator.clipboard.writeText(window.location.href)
-
-                .then(() => showToast("Link copied to clipboard!"))
-
-                .catch(() => showToast("Failed to copy link."));
-
+        function applyConfigValues() {
+            document.getElementById('txtPhone').innerText = config.phone;
+            document.getElementById('txtEmail').innerText = config.email;
+            document.getElementById('displayInsta').href = config.instagram;
+            document.getElementById('displayTikTok').href = config.tiktok;
+            document.getElementById('displayFB').href = config.facebook;
+            document.getElementById('displayYT').href = config.youtube;
         }
 
-    }
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = message;
+            toast.classList.remove('translate-x-full');
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => toast.classList.add('translate-x-full'), 3000);
+        }
 
+        function selectService(val) {
+            document.getElementById('serviceSelect').value = val;
+            showToast(`Selected Category: ${val}`);
+        }
 
-    // --- Intersection Observer Setup for Fade In/Out on Scroll ---
+        function handleOrder(e) {
+            e.preventDefault();
 
-    const observerOptions = {
+            const name = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
+            const service = document.getElementById('serviceSelect').value;
+            const budget = document.getElementById('clientBudget').value;
+            const brief = document.getElementById('clientBrief').value;
 
-        root: null, 
+            const whatsappMessage = `*New Order - ItSadanz Suite*%0A%0A*Name:* ${encodeURIComponent(name)}%0A*Phone:* ${encodeURIComponent(phone)}%0A*Category:* ${encodeURIComponent(service)}%0A*Budget:* ${encodeURIComponent(budget)}%0A*Project Brief:* ${encodeURIComponent(brief)}`;
+            const whatsappNumber = "94714529996";
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
-        rootMargin: '0px',
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+            showToast("Redirecting to WhatsApp...");
+            e.target.reset();
+        }
 
-        threshold: 0.1 // Triggers when 10% of the element is visible
+        function sharePage() {
+            const shareData = {
+                title: 'ItSadanz | Premium Video Editing Services',
+                text: 'Level up your content with next-gen video editing! Check out ItSadanz Editing Suite.',
+                url: window.location.href
+            };
 
-    };
-
-
-    const scrollObserver = new IntersectionObserver((entries) => {
-
-        entries.forEach(entry => {
-
-            if (entry.isIntersecting) {
-
-                entry.target.classList.add('active'); // Fade-in when scrolling down/up into view
-
+            if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                navigator.share(shareData)
+                    .then(() => showToast("Shared Successfully!"))
+                    .catch((error) => console.log("Sharing failed or cancelled", error));
             } else {
+                navigator.clipboard.writeText(window.location.href)
+                    .then(() => showToast("Link copied to clipboard!"))
+                    .catch(() => showToast("Failed to copy link."));
+            }
+        }
 
-                entry.target.classList.remove('active'); // Fade-out when scrolling away
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px 0px -8% 0px',
+            threshold: 0.12
+        };
 
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    entry.target.classList.remove('active');
+                }
+            });
+        }, observerOptions);
+
+        function initSnowEffect() {
+            const canvas = document.getElementById('snowCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                    this.y = Math.random() * canvas.height;
+                }
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = -10;
+                    this.size = Math.random() * 2.5 + 1;
+                    this.speedY = Math.random() * 0.4 + 0.15;
+                    this.speedX = Math.random() * 0.2 - 0.1;
+                    this.opacity = Math.random() * 0.5 + 0.2;
+                    this.glow = Math.random() * 8 + 4;
+                }
+                update() {
+                    this.y += this.speedY;
+                    this.x += this.speedX;
+                    this.opacity += Math.random() * 0.02 - 0.01;
+                    if (this.opacity < 0.1) this.opacity = 0.1;
+                    if (this.opacity > 0.7) this.opacity = 0.7;
+                    if (this.y > canvas.height || this.x < 0 || this.x > canvas.width) this.reset();
+                }
+                draw() {
+                    ctx.shadowBlur = this.glow;
+                    ctx.shadowColor = 'rgba(99, 102, 241, 0.4)';
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
 
+            const particleCount = Math.floor((canvas.width * canvas.height) / 9500);
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.shadowBlur = 0;
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Smooth anchor scrolling with a little inertia feel
+        function smoothScrollTo(targetY) {
+            const startY = window.scrollY;
+            const diff = targetY - startY;
+            const duration = 700;
+            let startTime = null;
+
+            function easeInOutCubic(t) {
+                return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / duration, 1);
+                const eased = easeInOutCubic(progress);
+                window.scrollTo(0, startY + diff * eased);
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        document.addEventListener('click', function(e) {
+            const anchor = e.target.closest('a[href^="#"]');
+            if (!anchor) return;
+            const hash = anchor.getAttribute('href');
+            const target = document.querySelector(hash);
+            if (!target) return;
+            e.preventDefault();
+            smoothScrollTo(target.getBoundingClientRect().top + window.scrollY - 84);
         });
 
-    }, observerOptions);
-
-
-    // --- Glowing Snow Particle System Logic ---
-
-    function initSnowEffect() {
-
-        const canvas = document.getElementById('snowCanvas');
-
-        const ctx = canvas.getContext('2d');
-
-        let particles = [];
-
-
-        function resizeCanvas() {
-
-            canvas.width = window.innerWidth;
-
-            canvas.height = window.innerHeight;
-
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-
-        resizeCanvas();
-
-
-        class Particle {
-
-            constructor() {
-
-                this.reset();
-
-                this.y = Math.random() * canvas.height; // Spread particles on start
-
-            }
-
-            reset() {
-
-                this.x = Math.random() * canvas.width;
-
-                this.y = -10;
-
-                this.size = Math.random() * 2.5 + 1; // Subtle small sizes (1px to 3.5px)
-
-                this.speedY = Math.random() * 0.4 + 0.15; // Soft and slow fall speed
-
-                this.speedX = Math.random() * 0.2 - 0.1; // Gentle horizontal drift
-
-                this.opacity = Math.random() * 0.5 + 0.2; // Opacity variation
-
-                this.glow = Math.random() * 8 + 4; // Glowing radius
-
-            }
-
-            update() {
-
-                this.y += this.speedY;
-
-                this.x += this.speedX;
-
-
-                // Simple twinkling effect (subtle opacity shifts)
-
-                this.opacity += Math.random() * 0.02 - 0.01;
-
-                if (this.opacity < 0.1) this.opacity = 0.1;
-
-                if (this.opacity > 0.7) this.opacity = 0.7;
-
-
-                // Reset particle if it leaves the viewable screen area
-
-                if (this.y > canvas.height || this.x < 0 || this.x > canvas.width) {
-
-                    this.reset();
-
-                }
-
-            }
-
-            draw() {
-
-                ctx.shadowBlur = this.glow;
-
-                ctx.shadowColor = 'rgba(99, 102, 241, 0.4)'; // Matches theme's Indigo glow
-
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-
-                ctx.beginPath();
-
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-
-                ctx.fill();
-
-            }
-
-        }
-
-
-        // Generate adaptive number of particles depending on viewport screen resolution
-
-        const particleCount = Math.floor((canvas.width * canvas.height) / 9500);
-
-        for (let i = 0; i < particleCount; i++) {
-
-            particles.push(new Particle());
-
-        }
-
-
-        function animate() {
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            ctx.shadowBlur = 0; // Clear shadow setup for canvas optimization
-
-            particles.forEach(p => {
-
-                p.update();
-
-                p.draw();
-
-            });
-
-            requestAnimationFrame(animate);
-
-        }
-
-        animate();
-
-    }
-
-
-    // Run Setup and Animations on page load
-
-    window.onload = function() {
-
-        applyConfigValues();
-
-        initSnowEffect(); // Fire up particle background
-
-
-
-        // Target all items with the .scroll-reveal class
-
-        const animatedElements = document.querySelectorAll('.scroll-reveal');
-
-        animatedElements.forEach(el => scrollObserver.observe(el));
-
-    };
-
-</script>
-
+        window.onload = function() {
+            applyConfigValues();
+            initSnowEffect();
+
+            const animatedElements = document.querySelectorAll('.scroll-reveal');
+            animatedElements.forEach(el => scrollObserver.observe(el));
+        };
+    </script>
 </body>
-
 </html>
